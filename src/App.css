@@ -40,8 +40,9 @@ h2{
   font-weight: 700;
   line-height: 1;
 }
-.cover{
-  height :100ch;
-  background:url("doctor-strange.jpg");
-  background-size: cover;
+.navbrand{
+  color: rgba(253, 0, 0, 0.9);
+}
+.navlink{
+  text-align: right;
 }

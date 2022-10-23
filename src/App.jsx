@@ -1,94 +1,56 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState} from 'react';
 import './App.css';
-import MovieBox from './MovieBox';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Navbar,Container,Nav,Form, FormControl,Button } from 'react-bootstrap';
-import Banner from './Banner';
-import Slider from './Slider';
+import {NavbarBrand } from 'react-bootstrap';
+import Login from './components/Login';
+import Register from './components/Register';
+import Home from './components/Home';
+import Search from './components/Search';
+import {Routes, Route, BrowserRouter, NavLink } from 'react-router-dom';
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
-const API_URL="https://api.themoviedb.org/3/movie/popular?api_key=5eda277be8430a944c1a666b99c3d019";
-const API_SEARCH="https://api.themoviedb.org/3/search/movie?api_key=5eda277be8430a944c1a666b99c3d019&query";
 function App() {
-
-  const [movies, setMovies]=useState([]);
-  const [query, setQuery]=useState('');
-
-  useEffect(() => {
-    fetch(API_URL)
-    .then((res)=>res.json())
-    .then(data=>{
-      console.log(data);
-      setMovies(data.results);
-    })
-  }, [])
-
-
-  const searchMovie = async(e)=>{
-    e.preventDefault();
-    console.log("Searching");
-    try{
-      const url=`https://api.themoviedb.org/3/search/movie?api_key=5eda277be8430a944c1a666b99c3d019&query=${query}`;
-      const res= await fetch(url);
-      const data= await res.json();
-      console.log(data);
-      setMovies(data.results);
-    }
-    catch(e){
-      console.log(e);
-    }
-  }
-
-  const changeHandler=(e)=>{
-    setQuery(e.target.value);
-  }
+  const tokenLocalStorage = localStorage.getItem("token");
+  const [token, setToken] = useState(tokenLocalStorage);
   return (
-    <>
-    <Navbar bg="dark" expand="lg" variant="dark">
-      <Container fluid>
-        <Navbar.Brand href="/home">Movies</Navbar.Brand>
-          <Nav>
-            <Nav.Link>Register</Nav.Link>
-              <Nav.Link>Login</Nav.Link>
-            </Nav>
-        <Navbar.Toggle aria-controls="navbarScroll"></Navbar.Toggle>
-
-          <Navbar.Collapse id="nabarScroll">
-            <Nav 
-            className="me-auto my-2 my-lg-3"
-            style={{maxHeight:'100px'}}
-            navbarScroll></Nav>
-
-            <Form className="d-flex" onSubmit={searchMovie} autoComplete="off">
-              <FormControl
-              type="search"
-              placeholder="Movie Search"
-              className="me-2"
-              aria-label="search"
-              name="query"
-              value={query} onChange={changeHandler}></FormControl>
-              <Button variant="secondary" type="submit">Search</Button>
-            </Form>
-          </Navbar.Collapse>
-      </Container>
-    </Navbar>
-    <div>
-      <Slider/>
-      {/* <Banner/> */}
-    </div>
-    <div>
-      <h1 className='p-4 m-1'>Popular Movies</h1>
-      {movies.length > 0 ?(
-        <div className="container">
-        <div className="grid">
-          {movies.map((movieReq)=>
-          <MovieBox key={movieReq.id} {...movieReq}/>)}
+    <GoogleOAuthProvider clientId={"931577766913-ncu5lvh4h4gmn0sbjc2e6jkl8roruk6a.apps.googleusercontent.com"}>
+      <BrowserRouter>
+        <div style ={{
+          display : "flex",
+          background : "black",
+          padding : '5px 0 5px 5 px',
+          fontSize: '20px'
+        }}>
+          <div className = "navbrand" style ={{ margin : '20px'}}>
+            <NavbarBrand href="/">Movies Web</NavbarBrand>
+          </div>
+          <div style ={{ margin : '10px'}}>
+            <NavLink className="navlink" to="/login" style={({ isActive }) => ({ 
+              color: isActive ? 'red' : 'white' })}>
+              Login
+            </NavLink>
+          </div>
+          <div style ={{ margin : '10px'}}>
+            <NavLink to="/register" style={({ isActive }) => ({ 
+              color: isActive ? 'red' : 'white' })}>
+              Register
+            </NavLink>
+          </div>
+          <div style ={{ margin : '10px'}}>
+            <NavLink to="/search" style={({ isActive }) => ({ 
+              color: isActive ? 'red' : 'white' })}>
+              Search
+            </NavLink>
+          </div>
         </div>
-    </div>
-      ):(
-        <h2>Sorry !! No Movies Found</h2>
-      )}
-    </div>   
-    </>
+        <Routes>
+          <Route path="/" element ={<Home/>}/>
+          <Route path="/login" element ={<Login token={token} setToken={setToken}/>}/>
+          <Route path="/register" element ={<Register token={token} setToken={setToken} />}/>
+          <Route path="/search" element ={<Search token={token} setToken={setToken} />}/>
+        </Routes>
+      </BrowserRouter>   
+    </GoogleOAuthProvider>
   );
 }
 
