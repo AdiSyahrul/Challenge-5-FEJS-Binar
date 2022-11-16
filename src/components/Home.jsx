@@ -17,10 +17,11 @@ const Home = ({token}) => {
 
   return (
     <>
-        <div>
+        {/* <div>
             <Slider/>
             <MovieListing />
         </div>
+
     </>
   )
 }
