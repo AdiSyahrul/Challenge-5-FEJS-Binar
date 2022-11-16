@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import {useState} from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {NavbarBrand } from 'react-bootstrap';
@@ -8,11 +8,15 @@ import Home from './components/Home';
 import Search from './components/Search';
 import {Routes, Route, BrowserRouter, NavLink } from 'react-router-dom';
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { Provider} from "react-redux";
+import store from './redux/store';
+
 
 function App() {
   const tokenLocalStorage = localStorage.getItem("token");
   const [token, setToken] = useState(tokenLocalStorage);
   return (
+    <Provider store ={store}>
     <GoogleOAuthProvider clientId={"931577766913-ncu5lvh4h4gmn0sbjc2e6jkl8roruk6a.apps.googleusercontent.com"}>
       <BrowserRouter>
         <div style ={{
@@ -51,6 +55,7 @@ function App() {
         </Routes>
       </BrowserRouter>   
     </GoogleOAuthProvider>
+    </Provider>
   );
 }
 

@@ -1,34 +1,25 @@
-import React, {useState,useEffect} from 'react';
+import React, {useEffect} from 'react';
 import Slider from './Slider';
-import MovieBox from './MovieBox';
+import MovieListing from './MovieListing';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllMovies } from '../redux/actions/movieAction';
 
-const API_URL="https://api.themoviedb.org/3/movie/popular?api_key=5eda277be8430a944c1a666b99c3d019";
-
-function Home (){
-    const [movies, setMovies]=useState([]);
+const Home = ({token}) => {
+    const dispatch =useDispatch()
+    const { movies } = useSelector((state) => state.movie);
+    
 
     useEffect(() => {
-        fetch(API_URL)
-        .then((res)=>res.json())
-        .then(data=>{
-        console.log(data);
-        setMovies(data.results);
-        })
+        
+        dispatch(getAllMovies())
+
     }, [])
 
   return (
     <>
         <div>
             <Slider/>
-        </div>
-        <div>
-        <h1 className='p-4 m-1'>Popular Movies</h1>
-            <div className="container">
-            <div className="grid">
-            {movies.map((movieReq)=>
-            <MovieBox key={movieReq.id} {...movieReq}/>)}
-            </div>
-        </div>
+            <MovieListing />
         </div>
     </>
   )

@@ -1,17 +1,39 @@
-const API_IMG="https://image.tmdb.org/t/p/w500/";
+import React, { useEffect, useState } from "react";
+import "./MovieBox.css";    
+import { Link } from "react-router-dom";
 
-const MovieBox =({poster_path})=>{
-    
-    return(
-        <div className="card text-center bg-secondary md-4">
-            <div className="card-body">
-              <img className="card-img-top" src={API_IMG+poster_path} />
-              <div className="card-body">
-                  <button type="button" className="btn btn-dark">View More</button>
+const API_IMG="https://image.tmdb.org/t/p/w500/";
+const MovieBox = ({movie}) => {
+
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        setTimeout(() => {
+            setIsLoading(false)
+        }, 1500)
+    }, [])
+    return <>
+    {
+        isLoading 
+        ? 
+        
+          <div className="cards"></div>
+        : 
+          <Link to={`/movie/${movie.id}`} style={{textDecoration:"none", color:"white" }}>
+            <div className="cards">
+              <img className="cards__img" src={`https://image.tmdb.org/t/p/original${movie?movie.poster_path: ""}`} />
+              <div className="cards__overlay">
+                <div className="card__title">{movie?movie.original_title : ""}</div>
+                <div className="card__runtime">
+                  {movie ? movie.release_date : ""}
+                  <span className="card__rating">{movie?movie.vote_average : ""}<i className="fas fa-star" /></span>
+                </div>
+                <div className="card__description">{movie?movie.overview.slice(0,188)+"..." : ""}</div>
               </div>
             </div>
-        </div>
-    )
-}
+          </Link>
+        }
+      </>
+    }
 
 export default MovieBox;
